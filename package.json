@@ -1,18 +1,24 @@
 {
   "name": "document-service",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "generate-fake-data.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node generate-fake-data.js"
   },
   "keywords": [],
   "author": "Moza Sajidah",
   "license": "ISC",
   "description": "A service for generating NIB document",
+  "type": "module",
   "dependencies": {
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "jspdf": "^2.5.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1"
   }
 }
