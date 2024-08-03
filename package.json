@@ -1,10 +1,10 @@
 {
   "name": "document-service",
   "version": "1.0.0",
-  "main": "generate-fake-data.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node generate-fake-data.js"
+    "dev": "node index.js"
   },
   "keywords": [],
   "author": "Moza Sajidah",
@@ -16,7 +16,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
-    "jspdf": "^2.5.1"
+    "jspdf": "^2.5.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1"

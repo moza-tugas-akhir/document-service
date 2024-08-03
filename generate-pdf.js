@@ -44,18 +44,28 @@ export function generatePDFs() {
     yPos += 20;
 
     Object.entries(item).forEach(([key, value]) => {
-      if (key !== 'docName' && key !== 'timestamp') {
+      if (key !== 'userId') {
         doc.setFontSize(10);
         // doc.text(`${key}: ${value}`, 30, yPos);
         if (key === 'name') {
           doc.text(`Nama                 : ${value}`, 30, yPos);
         } else if (key === 'docId') {
           doc.text(`ID Dokumen       : ${value}`, 30, yPos);
-        } else if (key === 'docType') {
-          doc.text(`Jenis Dokumen  : ${value}`, 30, yPos);
         }
         yPos += 7;
       }
+      // if (key !== 'docName' && key !== 'timestamp') {
+      //   doc.setFontSize(10);
+      //   // doc.text(`${key}: ${value}`, 30, yPos);
+      //   if (key === 'name') {
+      //     doc.text(`Nama                 : ${value}`, 30, yPos);
+      //   } else if (key === 'docId') {
+      //     doc.text(`ID Dokumen       : ${value}`, 30, yPos);
+      //   } else if (key === 'docType') {
+      //     doc.text(`Jenis Dokumen  : ${value}`, 30, yPos);
+      //   }
+      //   yPos += 7;
+      // }
     });
 
     // Save the PDF with a unique name
@@ -69,7 +79,11 @@ export function generatePDFs() {
 
     console.log(`Document titled ${pdfFileName} generated successfully!`);
 
-    generatedFiles.push({ path: pdfPath, metadata: item }); //for testing API
+    generatedFiles.push({
+      path: pdfPath,
+      intendedFileName: `${pdfFileName}`,
+      metadata: item,
+    }); //for testing API
   });
 
   console.log('All PDFs generated successfully!');

@@ -1,13 +1,11 @@
 import express from 'express';
-import axios from 'axios';
-import fs from 'fs';
-import FormData from 'form-data';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { generateFakeData, saveDataToTempFile } from './generate-fake-data.js';
 import { generatePDFs } from './generate-pdf.js';
 import { sendFileToBlockchain } from './send-file-to-blockchain-service.js';
+import { sendPdfToMinio } from './send-pdf-to-minio.js';
 
 dotenv.config();
 
@@ -33,26 +31,35 @@ async function main() {
   }
 
   try {
-    generatePDFs();
+    const generatedFiles = generatePDFs();
+    for (const file of generatedFiles) {
+      const metadata = {
+        userId: file.metadata.userId,
+        docId: file.metadata.docId,
+        docName: file.metadata.docName,
+        // docType: file.metadata.docType,
+        // timestamp: file.metadata.timestamp,
+      };
+
+      // Send the PDF to MinIO
+      // await sendPdfToMinio(file.path, metadata);
+
+      // try {
+      //   // , 'test-bucket'
+      //   console.log(`Sent ${file.intendedFileName} to MinIO`);
+      // } catch (error) {
+      //   console.error(
+      //     `Failed to send ${file.intendedFileName} to MinIO:`,
+      //     error.message
+      //   );
+      // }
+
+      // Send the PDF to the blockchain service
+      await sendFileToBlockchain(file.path, file.intendedFileName, metadata);
+    }
   } catch (error) {
     console.error('Error generating PDFs:', error);
   }
-
-  //   try {
-  //     const generatedFiles = generatePDFs();
-  //     for (const file of generatedFiles) {
-  //       const metadata = {
-  //         userid: file.metadata.userid,
-  //         docid: file.metadata.docId,
-  //         docname: file.metadata.docName,
-  //         doctype: file.metadata.docType,
-  //         timestamp: file.metadata.timestamp,
-  //       };
-  //       await sendFileToBlockchain(file.path, metadata);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error generating PDFs:', error);
-  //   }
 }
 
 main().catch((err) => {

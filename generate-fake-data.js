@@ -3,6 +3,7 @@ import { Faker, id_ID, en } from '@faker-js/faker';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,19 +17,23 @@ const faker = new Faker({
 function generateFakeData() {
   const fakeData = [];
   for (let i = 1; i < 31; i++) {
+    // Generate a new user ID
+    const userId = uuidv4();
     const name = faker.person.firstName();
     const secondName = faker.person.firstName();
     const fullName = name + ' ' + secondName;
     const docId = faker.string.uuid();
-    const docType = 'NIB';
-    const timestamp = faker.date.recent({ days: 10 }); // Use a single argument for days
+    // const docType = 'NIB';
+    // const timestamp = faker.date.recent({ days: 10 }); // Use a single argument for days
 
     fakeData.push({
+      userId: userId,
       name: fullName,
       docId: docId,
-      docName: name + secondName + '-' + docId + '-' + docType + '.pdf',
-      docType: docType,
-      timestamp: timestamp,
+      // docName: `${name}${secondName}-${docId}-${docType}.pdf`,
+      docName: `${name}${secondName}-${docId}.pdf`,
+      // docType: docType,
+      // timestamp: timestamp,
     });
   }
   return fakeData;
@@ -36,7 +41,7 @@ function generateFakeData() {
 
 // Save data to a temporary JSON file in a specific directory
 function saveDataToTempFile(data) {
-  // Define the directory within your repository where you want to save the temporary file
+  // Define the directory within the repository to save the temporary file
   const tempDir = path.join(__dirname, 'temp');
 
   // Ensure the directory exists
