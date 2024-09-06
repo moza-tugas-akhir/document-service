@@ -20,7 +20,7 @@ export async function sendFileToBlockchain(
     // form.append('timestamp', metadata.timestamp);
 
     // Add debug log
-    console.log('Sending file with metadata:', metadata);
+    // console.log('Sending file with metadata:', metadata);
 
     const response = await axios.post(
       `${process.env.BLOCKCHAIN_SERVICE_URL}/api/createdoc/`,
@@ -28,12 +28,22 @@ export async function sendFileToBlockchain(
       {
         headers: {
           ...form.getHeaders(),
+          Authorization: `Bearer ${process.env.API_TOKEN_IPFS}`,
         },
       }
     );
 
     console.log('File sent to blockchain service successfully:', response.data);
   } catch (error) {
-    console.error('Error uploading file:', error);
+    // console.error('Error uploading file:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+      console.error('Status:', error.response.status);
+      console.error('Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    } else {
+      console.error('Error setting up the request:', error.message);
+    }
   }
 }

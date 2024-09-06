@@ -12,13 +12,19 @@ const faker = new Faker({
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+// const rootDir = path.resolve(__dirname, '..');
 
-export function generatePDFs() {
-  // Read data from file (assuming JSON format)
+export function generatePDFs(sendMethod) {
+  // Read data from file
+  // const rawData = fs.readFileSync(
+  //   path.join(__dirname, 'temp', 'fakeData.json'),
+  //   'utf-8'
+  // );
   const rawData = fs.readFileSync(
-    path.join(__dirname, 'temp', 'fakeData.json'),
+    path.join(__dirname, 'fakeData.json'),
     'utf-8'
   );
+
   const data = JSON.parse(rawData);
 
   // for testing api
@@ -68,11 +74,30 @@ export function generatePDFs() {
       // }
     });
 
-    // Save the PDF with a unique name
-    // const pdfFileName = `${item.docName}.pdf`;
-    const pdfFileSaved = `Generated NIB ${index + 1}.pdf`;
-    const pdfFileName = item.docName;
-    const pdfPath = path.join(__dirname, 'temp', pdfFileSaved);
+    let pdfFileSaved, pdfFileName, pdfPath;
+
+    if (sendMethod === 'manual') {
+      // Save the PDF with a unique name
+      pdfFileSaved = `${item.docName}`;
+      // pdfFileName = item.docName;
+      pdfFileName = pdfFileSaved;
+
+      const tempNamedDir = path.join(__dirname, 'temp-named');
+      if (!fs.existsSync(tempNamedDir)) {
+        fs.mkdirSync(tempNamedDir, { recursive: true });
+      }
+
+      pdfPath = path.join(__dirname, 'temp-named', pdfFileSaved);
+    } else if (sendMethod === 'auto') {
+      // Save the PDF with a unique name
+      pdfFileSaved = `Generated NIB ${index + 1}.pdf`;
+      pdfFileName = item.docName;
+      pdfPath = path.join(__dirname, 'temp', pdfFileSaved);
+    }
+
+    // const pdfFileSaved = `Generated NIB ${index + 1}.pdf`;
+    // const pdfFileName = item.docName;
+    // const pdfPath = path.join(__dirname, 'temp', pdfFileSaved);
 
     // Save the PDF document
     fs.writeFileSync(pdfPath, doc.output(), 'binary');

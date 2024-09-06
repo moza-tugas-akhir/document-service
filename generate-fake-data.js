@@ -16,14 +16,16 @@ const faker = new Faker({
 // Generate 30 fake data entries
 function generateFakeData() {
   const fakeData = [];
-  for (let i = 1; i < 31; i++) {
+  // ganti upper bound untuk testing
+  for (let i = 0; i < 30; i++) {
     // Generate a new user ID
-    const userId = uuidv4();
+    // const userId = uuidv4();
+    const userId = Math.random().toString(12).substring(7);
     const name = faker.person.firstName();
     const secondName = faker.person.firstName();
     const fullName = name + ' ' + secondName;
-    const docId = faker.string.uuid();
-    // const docType = 'NIB';
+    const docId = faker.string.uuid(); //docId = `document_${userId}` keep kalo bisa bedain antara user id & doc id
+    // const docType = 'NIB'; application/pdf [ga perlu dimodify for now]
     // const timestamp = faker.date.recent({ days: 10 }); // Use a single argument for days
 
     fakeData.push({
@@ -39,24 +41,38 @@ function generateFakeData() {
   return fakeData;
 }
 
-// Save data to a temporary JSON file in a specific directory
-function saveDataToTempFile(data) {
-  // Define the directory within the repository to save the temporary file
-  const tempDir = path.join(__dirname, 'temp');
+// // Save data to a temporary JSON file in a specific directory
+// function saveDataToTempFile(data) {
+//   // Define the directory within the repository to save the temporary file
+//   const tempDir = path.join(__dirname, 'temp');
 
-  // Ensure the directory exists
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir);
-  }
+//   // Ensure the directory exists
+//   if (!fs.existsSync(tempDir)) {
+//     fs.mkdirSync(tempDir);
+//   }
 
-  // Construct the full path to the temporary file
-  const tempFilePath = path.join(tempDir, 'fakeData.json');
+//   // Construct full path to the temp file
+//   const tempFilePath = path.join(tempDir, 'fakeData.json');
 
-  // Write the data to the file in JSON format
-  fs.writeFileSync(tempFilePath, JSON.stringify(data, null, 2));
+//   // Write data to the file in JSON format
+//   fs.writeFileSync(tempFilePath, JSON.stringify(data, null, 2));
 
-  // Return the path to the temporary file
-  return tempFilePath;
+//   // Return the path to temp file
+//   return tempFilePath;
+// }
+
+// Save data to a JSON file in the root directory
+function saveDataToRootFile(data) {
+  // Construct full path to the file in the root directory
+  const filePath = path.join(__dirname, 'fakeData.json');
+
+  // Write data to the file in JSON format
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+
+  console.log(`Data saved to ${filePath}`);
+
+  // Return the path to the file
+  return filePath;
 }
 
 // Delete the temporary file
@@ -69,7 +85,7 @@ function saveDataToTempFile(data) {
 //   }
 // }
 
-export { generateFakeData, saveDataToTempFile };
+export { generateFakeData, saveDataToRootFile };
 
 // Ensure the temporary file is deleted when the program stops
 // process.on('exit', () => {
